@@ -1,0 +1,32 @@
+{
+    "name": "dotblue/nette-webimages",
+    "description": "On-the-fly generated web images for your Nette app",
+    "type": "library",
+    "keywords": [
+        "routing",
+        "images",
+        "nette"
+    ],
+    "license": ["BSD-3-Clause"],
+    "authors": [
+        {
+            "name": "Vojtěch Dobeš",
+            "homepage": "http://github.com/vojtech-dobes"
+        },
+        {
+            "name": "dotBlue",
+            "homepage": "http://dotblue.net"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/dotblue/nette-webimages/issues",
+        "source": "https://github.com/dotblue/nette-webimages"
+    },
+    "require": {
+        "php": ">=5.4",
+        "nette/nette": "~2.1.0"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    }
+}

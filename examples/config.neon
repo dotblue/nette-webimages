@@ -1,0 +1,14 @@
+extensions:
+	webimages: DotBlue\WebImages\Extension
+
+webimages:
+	providers:
+		- DefaultImageProvider(%wwwDir%)
+		- FakeImageProvider
+
+	routes:
+		- 'images/<id>-<width>x<height>.jpg'
+
+	rules:
+		- [width: 300, height: 200]
+		- [width: 50, height: 30]
