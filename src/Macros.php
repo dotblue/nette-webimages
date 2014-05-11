@@ -17,7 +17,9 @@ class Macros extends Latte\Macros\MacroSet
 	public static function install(Latte\Compiler $parser)
 	{
 		$me = new static($parser);
-		$me->addMacro('src', NULL, NULL, function(MacroNode $node, PhpWriter $writer) use ($me) {
+		$me->addMacro('src', function (MacroNode $node, PhpWriter $writer) use ($me) {
+			return $me->macroSrc($node, $writer);
+		}, NULL, function(MacroNode $node, PhpWriter $writer) use ($me) {
 			return ' ?> src="<?php ' . $me->macroSrc($node, $writer) . ' ?>"<?php ';
 		});
 	}
