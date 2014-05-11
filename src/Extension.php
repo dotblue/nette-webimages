@@ -77,8 +77,8 @@ class Extension extends DI\CompilerExtension
 			$generator->addSetup('addProvider', [$this->prefix('@provider' . $name)]);
 		}
 
-		$latte = $container->getDefinition('nette.latte');
-		$latte->addSetup('DotBlue\WebImages\Macros::install(?->compiler)', ['@self']);
+		$latte = $container->getDefinition('nette.latteFactory');
+		$latte->addSetup('DotBlue\WebImages\Macros::install(?->getCompiler())', ['@self']);
 	}
 
 }

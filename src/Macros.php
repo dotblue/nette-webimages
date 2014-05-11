@@ -6,9 +6,9 @@
 
 namespace DotBlue\WebImages;
 
-use Nette\Latte;
-use Nette\Latte\MacroNode;
-use Nette\Latte\PhpWriter;
+use Latte;
+use Latte\MacroNode;
+use Latte\PhpWriter;
 
 
 class Macros extends Latte\Macros\MacroSet
