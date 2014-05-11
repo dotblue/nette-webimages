@@ -1,7 +1,11 @@
 #### Requirements
 
 - PHP 5.4+
-- [nette/nette](https://github.com/nette/nette) >= 2.1
+- [nette/application](https://github.com/nette/application) >= 2.2
+- [nette/di](https://github.com/nette/di) >= 2.2
+- [nette/http](https://github.com/nette/http) >= 2.2
+- [latte/latte](https://github.com/nette/latte) >= 2.2
+- [nette/utils](https://github.com/nette/utils) >= 2.2
 
 ## Installation
 
