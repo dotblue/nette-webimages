@@ -55,6 +55,13 @@ class Macros extends Latte\Macros\MacroSet
 			}
 		}
 
+		if (!isset($arguments['width'])) {
+			$arguments['width'] = 0;
+		}
+		if (!isset($arguments['height'])) {
+			$arguments['height'] = 0;
+		}
+
 		return $arguments;
 	}
 
