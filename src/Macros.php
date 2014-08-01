@@ -32,7 +32,7 @@ class Macros extends Latte\Macros\MacroSet
 
 	public function macroSrc(MacroNode $node, PhpWriter $writer)
 	{
-		return $writer->write('echo %escape(%modify($_presenter->link(":Nette:Micro:", DotBlue\WebImages\Macros::prepareArguments([%node.args]))))');
+		return $writer->write('echo %escape(%modify($_presenter->link("//:Nette:Micro:", DotBlue\WebImages\Macros::prepareArguments([%node.args]))))');
 	}
 
 
