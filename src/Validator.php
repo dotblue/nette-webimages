@@ -59,4 +59,16 @@ class Validator
 		return count($this->rules) > 0 ? FALSE : TRUE;
 	}
 
+
+
+	/**
+	 * Returns all added rules.
+	 *
+	 * @return array[]
+	 */
+	public function getRules()
+	{
+		return $this->rules;
+	}
+
 }
