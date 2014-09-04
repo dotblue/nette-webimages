@@ -20,6 +20,9 @@ class Generator
 	/** @var Http\IRequest */
 	private $httpRequest;
 
+	/** @var Http\IResponse */
+	private $httpResponse;
+
 	/** @var Validator */
 	private $validator;
 
@@ -28,10 +31,11 @@ class Generator
 
 
 
-	public function __construct($wwwDir, Http\IRequest $httpRequest, Validator $validator)
+	public function __construct($wwwDir, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Validator $validator)
 	{
 		$this->wwwDir = $wwwDir;
 		$this->httpRequest = $httpRequest;
+		$this->httpResponse = $httpResponse;
 		$this->validator = $validator;
 	}
 
@@ -71,6 +75,12 @@ class Generator
 			if ($image) {
 				break;
 			}
+		}
+
+		if (!$image) {
+			$this->httpResponse->setHeader('Content-Type', 'image/jpeg');
+			$this->httpResponse->setCode(Http\IResponse::S404_NOT_FOUND);
+			exit;
 		}
 
 		$destination = $this->wwwDir . '/' . $this->httpRequest->getUrl()->getPath();
