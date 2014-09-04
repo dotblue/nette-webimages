@@ -6,13 +6,11 @@
 
 namespace DotBlue\WebImages;
 
-use stdClass;
-
 
 class Validator
 {
 
-	/** @var stdClass[] */
+	/** @var array[] */
 	private $rules = [];
 
 
@@ -26,7 +24,7 @@ class Validator
 	 */
 	public function addRule($width, $height, $algorithm)
 	{
-		$this->rules[] = (object) [
+		$this->rules[] = [
 			'width' => (int) $width,
 			'height' => (int) $height,
 			'algorithm' => (int) $algorithm,
@@ -47,11 +45,11 @@ class Validator
 	{
 		foreach ($this->rules as $rule) {
 			if (
-				(int) $width === $rule->width
-				&& (int) $height === $rule->height
+				(int) $width === $rule['width']
+				&& (int) $height === $rule['height']
 				&& (
 					!isset($algorithm)
-					|| (int) $algorithm === $rule->algorithm
+					|| (int) $algorithm === $rule['algorithm']
 				)
 			) {
 				return TRUE;
