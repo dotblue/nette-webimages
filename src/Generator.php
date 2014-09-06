@@ -8,7 +8,7 @@ namespace DotBlue\WebImages;
 
 use Nette\Application;
 use Nette\Http;
-use Nette\Image;
+use Nette\Utils\Image;
 
 
 class Generator
