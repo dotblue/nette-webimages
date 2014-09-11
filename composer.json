@@ -23,12 +23,15 @@
         "source": "https://github.com/dotblue/nette-webimages"
     },
     "require": {
-        "php": ">=5.4",
-        "nette/application": ">=2.2.0,<2.3.0",
-        "nette/di": ">=2.2.0,<2.3.0",
-        "nette/http": ">=2.2.0,<2.3.0",
-        "latte/latte": ">=2.2.0,<2.3.0",
-        "nette/utils": ">=2.2.0,<2.3.0"
+        "php": ">=5.3.3",
+        "nette/application": "~2.2.0",
+        "nette/di": "~2.2.0",
+        "nette/http": "~2.2.0",
+        "latte/latte": "~2.2.0",
+        "nette/utils": "~2.2.0"
+    },
+    "require-dev": {
+        "nette/tester": "@dev"
     },
     "autoload": {
         "classmap": ["src/"]

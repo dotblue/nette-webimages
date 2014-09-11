@@ -1,6 +1,7 @@
 extensions:
 	webimages: DotBlue\WebImages\Extension
 
+
 webimages:
 	providers:
 		- DefaultImageProvider(%wwwDir%)

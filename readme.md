@@ -1,6 +1,6 @@
 #### Requirements
 
-- PHP 5.4+
+- PHP 5.3.3+
 - [nette/application](https://github.com/nette/application) >= 2.2
 - [nette/di](https://github.com/nette/di) >= 2.2
 - [nette/http](https://github.com/nette/http) >= 2.2
@@ -15,9 +15,9 @@ $ composer require dotblue/nette-webimages@~1.0
 ```
 
 2) Register as Configurator's extension:
-```
+```yml
 extensions:
-	webimages: DotBlue\WebImages\Extension
+	webimages: DotBlue\WebImages\DI\Extension
 ```
 
 ## Concept
@@ -39,7 +39,7 @@ First, you have to define your `DotBlue\WebImages\IProvider` implementation. Its
 
 When you have it, register it in configuration:
 
-```
+```yml
 webimages:
 	providers:
 		- <name of your class>
@@ -47,7 +47,7 @@ webimages:
 
 Secondly you have to specify route where your images will be available. Central point of the route is `id` parameter, which should uniquely identify your image. Lets setup simple route:
 
-```
+```yml
 webimages:
 	routes:
 		- images/<id>-<width>x<height>.jpg
@@ -65,4 +65,4 @@ This will result in following HTML:
 <img src="/images/foo-200x150.jpg">
 ```
 
-Creation of this file will handle your implementation of `DotBlue\WebImages\IProvider`.
+Creation of this file will be handled by your implementation of `DotBlue\WebImages\IProvider`.

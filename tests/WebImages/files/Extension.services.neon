@@ -1,0 +1,18 @@
+webimages:
+    rules:
+        one: [ width: 1, height: 2 ]
+        - [ width: 1, height: 2, flags: 3 ]
+    providers:
+        one: NullProvider
+        - BlankProvider
+    routes:
+        - 'images/<id>-<width>x<height>.jpg'
+        'images/<id>-<width>x<height>.png':
+            flags: 3
+services:
+    router: Nette\Application\Routers\RouteList
+    nette.latteFactory: Latte\Engine
+    - Nette\Http\UrlScript
+    - Nette\Http\Request
+parameters:
+    wwwDir: ''
