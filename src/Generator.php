@@ -6,12 +6,13 @@
 
 namespace DotBlue\WebImages;
 
+use Nette;
 use Nette\Application;
 use Nette\Http;
 use Nette\Utils\Image;
 
 
-class Generator
+class Generator extends Nette\Object
 {
 
 	/** @var string */

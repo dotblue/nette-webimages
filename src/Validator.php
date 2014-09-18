@@ -6,8 +6,10 @@
 
 namespace DotBlue\WebImages;
 
+use Nette;
 
-class Validator
+
+class Validator extends Nette\Object
 {
 
 	/** @var array[] */
