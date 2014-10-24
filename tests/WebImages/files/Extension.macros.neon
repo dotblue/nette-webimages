@@ -1,0 +1,7 @@
+services:
+    router: Nette\Application\Routers\RouteList
+    nette.latteFactory: Latte\Engine
+    - Nette\Http\UrlScript
+    - Nette\Http\Request
+parameters:
+    wwwDir: ''

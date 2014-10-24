@@ -9,68 +9,42 @@ namespace DotBlue\WebImages;
 use Nette;
 
 
+/**
+ * @method \DotBlue\WebImages\Rule[] getRules()
+ */
 class Validator extends Nette\Object
 {
 
-	/** @var array[] */
-	private $rules = [];
-
+	/** @var \DotBlue\WebImages\Rule[] */
+	protected $rules = array();
 
 
 	/**
-	 * Adds rule.
-	 *
-	 * @param  int
-	 * @param  int
-	 * @param  int
+	 * @param \DotBlue\WebImages\Rule $rule
+	 * @return \DotBlue\WebImages\Validator
 	 */
-	public function addRule($width, $height, $algorithm)
+	public function addRule(Rule $rule)
 	{
-		$this->rules[] = [
-			'width' => (int) $width,
-			'height' => (int) $height,
-			'algorithm' => (int) $algorithm,
-		];
+		$this->rules[] = $rule;
+		return $this;
 	}
 
 
-
 	/**
-	 * Validates whether provided arguments match at least one rule.
-	 *
-	 * @param  int
-	 * @param  int
-	 * @param  int
-	 * @return bool
+	 * @param int
+	 * @param int
+	 * @param int|NULL
+	 * @return boolean
 	 */
-	public function validate($width, $height, $algorithm)
+	public function validate($width, $height, $flags = NULL)
 	{
 		foreach ($this->rules as $rule) {
-			if (
-				(int) $width === $rule['width']
-				&& (int) $height === $rule['height']
-				&& (
-					!isset($algorithm)
-					|| (int) $algorithm === $rule['algorithm']
-				)
-			) {
+			if ($rule->validate($width, $height, $flags)) {
 				return TRUE;
 			}
 		}
 
 		return count($this->rules) > 0 ? FALSE : TRUE;
-	}
-
-
-
-	/**
-	 * Returns all added rules.
-	 *
-	 * @return array[]
-	 */
-	public function getRules()
-	{
-		return $this->rules;
 	}
 
 }

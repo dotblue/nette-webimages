@@ -1,0 +1,12 @@
+<?php
+// source: %a%
+
+// prolog Latte\Macros\CoreMacros
+list($_b, $_g, $_l) = $template->initialize('%[a-z0-9]+%', 'html')
+;
+//
+// main template
+//
+?>
+<img src="<?php echo Latte\Runtime\Filters::escapeHtml($_presenter->link("//:Nette:Micro:", DotBlue\WebImages\Helpers::prepareArguments(array('foo', 1, 2))), ENT_COMPAT) ?>
+">

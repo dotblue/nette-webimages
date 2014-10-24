@@ -7,101 +7,97 @@
 namespace DotBlue\WebImages;
 
 use Nette;
-use Nette\Application;
-use Nette\Http;
+use Nette\Http\IRequest;
+use DotBlue\WebImages\Validator;
 use Nette\Utils\Image;
 
 
+/**
+ * @method \DotBlue\WebImages\Validator getValidator()
+ * @method \DotBlue\WebImages\IProvider[] getProviders()
+ */
 class Generator extends Nette\Object
 {
 
 	/** @var string */
-	private $wwwDir;
-
-	/** @var Http\IRequest */
-	private $httpRequest;
-
-	/** @var Http\IResponse */
-	private $httpResponse;
-
-	/** @var Validator */
-	private $validator;
-
-	/** @var IProvider[] */
-	private $providers = [];
+	protected $wwwDir;
 
 
+	/** @var \Nette\Http\IRequest */
+	protected $httpRequest;
 
-	public function __construct($wwwDir, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Validator $validator)
+
+	/** @var \DotBlue\WebImages\Validator */
+	protected $validator;
+
+
+	/** @var \DotBlue\WebImages\IProvider[] */
+	protected $providers = array();
+
+
+	/**
+	 * @param string
+	 * @param \Nette\Http\IRequest
+	 * @param \DotBlue\WebImages\Validator
+	 */
+	public function __construct($wwwDir, IRequest $httpRequest, Validator $validator)
 	{
 		$this->wwwDir = $wwwDir;
 		$this->httpRequest = $httpRequest;
-		$this->httpResponse = $httpResponse;
 		$this->validator = $validator;
 	}
 
 
-
+	/**
+	 * @return \DotBlue\WebImages\Generator
+	 */
 	public function addProvider(IProvider $provider)
 	{
 		$this->providers[] = $provider;
+		return $this;
 	}
 
 
-
 	/**
-	 * @return Validator
+	 * @param string
+	 * @param int
+	 * @param int
+	 * @param int|NULL
+	 * @return \Nette\Utils\Image|NULL
+	 * @throws \Exception
 	 */
-	public function getValidator()
+	public function generateImage($id, $width, $height, $flags = NULL)
 	{
-		return $this->validator;
-	}
-
-
-
-	/**
-	 * @param  string
-	 * @param  int
-	 * @param  int
-	 * @param  int
-	 */
-	public function generateImage($id, $width, $height, $algorithm)
-	{
-		if (!$this->validator->validate($width, $height, $algorithm)) {
-			throw new Application\BadRequestException;
+		if (!$this->validator->validate($width, $height, $flags)) {
+			throw new \Exception("Image with params ({$width}x{$height}, {$flags}) is not allowed - check your 'webimages.rules' please.");
 		}
 
 		$image = NULL;
 		foreach ($this->providers as $provider) {
-			$image = $provider->getImage($id, $width, $height, $algorithm);
-			if ($image) {
+			$image = $provider->getImage($id, $width, $height, $flags);
+			if ($image instanceof Image) {
 				break;
 			}
 		}
 
-		if (!$image) {
-			$this->httpResponse->setHeader('Content-Type', 'image/jpeg');
-			$this->httpResponse->setCode(Http\IResponse::S404_NOT_FOUND);
-			exit;
+		if (!$image instanceof Image) {
+			throw new \Exception("Image not found.");
 		}
 
-		$destination = $this->wwwDir . '/' . $this->httpRequest->getUrl()->getPath();
+		$destination = rtrim($this->wwwDir, '/') . '/' . ltrim($this->httpRequest->getUrl()->getPath(), '/');
 
 		$dirname = dirname($destination);
 		if (!is_dir($dirname)) {
-			$success = @mkdir($dirname, 0777, TRUE);
-			if (!$success) {
-				throw new Application\BadRequestException;
+			if (!@mkdir($dirname, 0777, TRUE)) {
+				throw new \Exception("Cannot create image directory.");
 			}
 		}
 
-		$success = $image->save($destination, 90, Image::JPEG);
-		if (!$success) {
-			throw new Application\BadRequestException;
+		if (!$image->save($destination)) {
+			throw new \Exception("Cannot save image.");
 		}
 
-		$image->send();
-		exit;
+		return $image;
 	}
 
 }

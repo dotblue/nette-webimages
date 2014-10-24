@@ -11,21 +11,19 @@ class DefaultImageProvider implements IProvider
 	private $wwwDir;
 
 
-
 	public function __construct($wwwDir)
 	{
 		$this->wwwDir = $wwwDir;
 	}
 
 
-
-	public function getImage($id, $width, $height, $algorithm = NULL)
+	public function getImage($id, $width, $height, $flags = NULL)
 	{
 		$path = $this->wwwDir . '/originals/' . $id . '.jpg';
 
 		if (is_file($path)) {
 			$image = Image::fromFile($path);
-			$image->resize($width, $height, $algorithm);
+			$image->resize($width, $height, $flags);
 			return $image;
 		}
 	}
