@@ -137,7 +137,11 @@ class Extension extends DI\CompilerExtension
 
 		if ($config['prependRoutesToRouter']) {
 			$router = $container->getByType('Nette\Application\IRouter');
-			if (!$router) {
+			if ($router) {
+				if (!$router instanceof DI\ServiceDefinition) {
+					$router = $container->getDefinition($router);
+				}
+			} else {
 				$router = $container->getDefinition('router');
 			}
 			$router->addSetup('DotBlue\WebImages\Helpers::prependRoute', [
