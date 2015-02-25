@@ -12,10 +12,6 @@ use Nette\DI;
 class Extension extends DI\CompilerExtension
 {
 
-	const FORMAT_JPEG = 'jpeg';
-	const FORMAT_PNG = 'png';
-	const FORMAT_GIF = 'gif';
-
 	/** @var array */
 	private $defaults = [
 		'routes' => [],
@@ -23,14 +19,7 @@ class Extension extends DI\CompilerExtension
 		'rules' => [],
 		'providers' => [],
 		'wwwDir' => '%wwwDir%',
-		'format' => self::FORMAT_JPEG,
-	];
-
-	/** @var array */
-	public $supportedFormats = [
-		self::FORMAT_JPEG => Generator::FORMAT_JPEG,
-		self::FORMAT_PNG => Generator::FORMAT_PNG,
-		self::FORMAT_GIF => Generator::FORMAT_GIF,
+		'format' => Route::FORMAT_JPEG,
 	];
 
 
@@ -78,20 +67,43 @@ class Extension extends DI\CompilerExtension
 					$definition['format'] = $this->recognizeFormatInMask($definition['mask']) ?: $config['format'];
 				}
 
-				if (!isset($this->supportedFormats[$definition['format']])) {
-					throw new InvalidConfigException("Format '$definition[format]' isn't supported.");
+				if (!isset($definition['format'])) {
+					$definition['format'] = $this->recognizeFormatInMask($definition['mask']) ?: $config['format'];
+					if (!isset(Route::$supportedFormats[$definition['format']])) {
+						throw new InvalidConfigException("Format '$definition[format]' isn't supported.");
+					}
 				}
-				$definition['format'] = $this->supportedFormats[$definition['format']];
 
 				$route = $container->addDefinition($this->prefix('route' . $i))
 					->setClass('DotBlue\WebImages\Route', [
 						$definition['mask'],
-						$definition['format'],
 						$definition['defaults'],
 						$this->prefix('@generator'),
 					])
 					->addTag($this->prefix('route'))
 					->setAutowired(FALSE);
+
+				if (isset($definition['id'])) {
+					if (($parameter = $this->recognizeMaskParameter($definition['id'])) || $parameter === FALSE || $parameter === NULL) {
+						$route->addSetup('setIdParameter', [
+							$parameter,
+						]);
+					} else {
+						$route->addSetup('setId', [
+							$definition['id'],
+						]);
+					}
+				}
+
+				if ($parameter = $this->recognizeMaskParameter($definition['format'])) {
+					$route->addSetup('setFormatParameter', [
+						$parameter,
+					]);
+				} else {
+					$route->addSetup('setFormat', [
+						$definition['format'],
+					]);
+				}
 
 				$router->addSetup('$service[] = ?', [
 					$this->prefix('@route' . $i),
@@ -141,11 +153,24 @@ class Extension extends DI\CompilerExtension
 	 * @param  string
 	 * @return string|NULL
 	 */
+	private function recognizeMaskParameter($value)
+	{
+		if ((substr($value, 0, 1) === '<') && (substr($value, -1) === '>')) {
+			return substr($value, 1, -1);
+		}
+	}
+
+
+
+	/**
+	 * @param  string
+	 * @return string|NULL
+	 */
 	private function recognizeFormatInMask($mask)
 	{
 		$possibleFormats = array_map(function ($format) {
 			return '.' . $format;
-		}, array_keys($this->supportedFormats));
+		}, array_keys(Route::$supportedFormats));
 		if (in_array(substr($mask, -5), $possibleFormats)) {
 			return substr($mask, -4);
 		} elseif (in_array(substr($mask, -4), $possibleFormats)) {

@@ -19,8 +19,17 @@ class DefaultImageProvider implements IProvider
 
 
 
-	public function getImage($id, $width, $height, $algorithm = NULL)
+	public function getImage(ImageRequest $request)
 	{
+		$id = $request->getId();
+		$width = $request->getWidth();
+		$height = $request->getHeight();
+		$parameters = $request->getParameters();
+
+		$algorithm = isset($parameters['algorithm'])
+			? $parameters['algorithm']
+			: self::FIT;
+
 		$path = $this->wwwDir . '/originals/' . $id . '.jpg';
 
 		if (is_file($path)) {

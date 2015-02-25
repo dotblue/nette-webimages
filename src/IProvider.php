@@ -16,6 +16,6 @@ interface IProvider
 
 
 
-	function getImage($id, $width, $height);
+	function getImage(ImageRequest $request);
 
 }

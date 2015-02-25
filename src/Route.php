@@ -12,15 +12,34 @@ use Nette\Application;
 class Route extends Application\Routers\Route
 {
 
+	const FORMAT_JPEG = 'jpeg';
+	const FORMAT_PNG = 'png';
+	const FORMAT_GIF = 'gif';
+
+	/** @var string|NULL */
+	private $id;
+
+	/** @var string|NULL */
+	private $format;
+
+	/** @var string */
+	private $idParameter = 'id';
+
+	/** @var string|NULL */
+	private $formatParameter;
+
 	/** @var array */
-	private $defaults = [
+	public static $supportedFormats = [
+		self::FORMAT_JPEG => Generator::FORMAT_JPEG,
+		self::FORMAT_PNG => Generator::FORMAT_PNG,
+		self::FORMAT_GIF => Generator::FORMAT_GIF,
 	];
+
+	/** @var string */
+	private $defaults;
 
 	/** @var Generator */
 	private $generator;
-
-	/** @var string */
-	private $format;
 
 
 
@@ -30,31 +49,86 @@ class Route extends Application\Routers\Route
 	 * @param  array
 	 * @param  Validator
 	 */
-	public function __construct($mask, $format, array $defaults, Generator $generator)
+	public function __construct($mask, array $defaults, Generator $generator)
 	{
-		$this->defaults = array_replace($this->defaults, $defaults);
+		$this->defaults = $defaults;
 		$this->generator = $generator;
-		$this->format = $format;
 
-		$defaults[NULL][self::FILTER_OUT] = function ($params) use ($defaults, $generator) {
-			$width = $this->acquireArgument('width', $params);
-			$height = $this->acquireArgument('height', $params);
+		$defaults[NULL][self::FILTER_OUT] = function ($parameters) {
+			$width = $this->acquireArgument('width', $parameters);
+			$height = $this->acquireArgument('height', $parameters);
 
-				throw new NotAllowedImageException("Image with params ({$width}x{$height}, {$algorithm}) is not allowed - check your 'webimages.rules' please.");
-			if (!$generator->getValidator()->validate($width, $height)) {
+			if (!$this->generator->getValidator()->validate($width, $height)) {
+				throw new NotAllowedImageException("Image with size {$width}x{$height} is not allowed - check your 'webimages.rules' please.");
 			}
 
-			if (isset($defaults[NULL][self::FILTER_OUT])) {
-				$params = call_user_func($defaults[NULL][self::FILTER_OUT], $params);
+			if (isset($this->defaults[NULL][self::FILTER_OUT])) {
+				$parameters = call_user_func($this->defaults[NULL][self::FILTER_OUT], $parameters);
 			}
 
-			return $params;
+			return $parameters;
 		};
 
 		$defaults['presenter'] = 'Nette:Micro';
 		$defaults['callback'] = $this;
 
 		parent::__construct($mask, $defaults);
+	}
+
+
+
+	/**
+	 * @param  string
+	 * @return Route provides a fluent interface
+	 */
+	public function setId($id)
+	{
+		$this->id = $id;
+		return $this;
+	}
+
+
+
+	/**
+	 * @param  string
+	 * @return Route provides a fluent interface
+	 */
+	public function setIdParameter($parameter)
+	{
+		if (!$parameter) {
+			$parameter = NULL;
+		}
+
+		$this->idParameter = $parameter;
+		return $this;
+	}
+
+
+
+	/**
+	 * @param  string
+	 * @return Route provides a fluent interface
+	 */
+	public function setFormat($format)
+	{
+		$this->format = $format;
+		return $this;
+	}
+
+
+
+	/**
+	 * @param  string
+	 * @return Route provides a fluent interface
+	 */
+	public function setFormatParameter($parameter)
+	{
+		if (!$parameter) {
+			$parameter = NULL;
+		}
+
+		$this->formatParameter = $parameter;
+		return $this;
 	}
 
 
@@ -74,14 +148,36 @@ class Route extends Application\Routers\Route
 
 	public function __invoke($presenter)
 	{
-		$params = $presenter->getRequest()->getParameters();
+		$parameters = $presenter->getRequest()->getParameters();
 
-		$id = $params['id'];
+		if ($this->formatParameter) {
+			if (isset($parameters[$this->formatParameter])) {
+				$format = $parameters[$this->formatParameter];
+			} else {
+				throw new NotAllowedImageException("Format must be specified as parameter, but it's not.");
+			}
+		} else {
+			$format = $this->format;
+		}
 
-		$width = $this->acquireArgument('width', $params);
-		$height = $this->acquireArgument('height', $params);
+		if (!isset(self::$supportedFormats[$format])) {
+			throw new NotAllowedImageException("Format '$format' is not supported.");
+		}
+		$format = self::$supportedFormats[$format];
 
-		$this->generator->generateImage($this->format, $id, $width, $height);
+		if (isset($parameters[$this->idParameter])) {
+			$id = $parameters[$this->idParameter];
+		} else {
+			$id = $this->id;
+		}
+
+		$this->generator->generateImage(new ImageRequest(
+			$format,
+			$id,
+			$this->acquireArgument('width', $parameters),
+			$this->acquireArgument('height', $parameters),
+			$parameters
+		));
 	}
 
 }
