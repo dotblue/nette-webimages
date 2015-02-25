@@ -13,6 +13,7 @@ class Route extends Application\Routers\Route
 {
 
 	const FORMAT_JPEG = 'jpeg';
+	const FORMAT_JPG = 'jpg';
 	const FORMAT_PNG = 'png';
 	const FORMAT_GIF = 'gif';
 
@@ -31,6 +32,7 @@ class Route extends Application\Routers\Route
 	/** @var array */
 	public static $supportedFormats = [
 		self::FORMAT_JPEG => Generator::FORMAT_JPEG,
+		self::FORMAT_JPG => Generator::FORMAT_JPEG,
 		self::FORMAT_PNG => Generator::FORMAT_PNG,
 		self::FORMAT_GIF => Generator::FORMAT_GIF,
 	];
