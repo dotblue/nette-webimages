@@ -20,17 +20,22 @@ class Route extends Application\Routers\Route
 	/** @var Generator */
 	private $generator;
 
+	/** @var string */
+	private $format;
+
 
 
 	/**
 	 * @param  string
+	 * @param  string
 	 * @param  array
 	 * @param  Validator
 	 */
-	public function __construct($mask, array $defaults, Generator $generator)
+	public function __construct($mask, $format, array $defaults, Generator $generator)
 	{
 		$this->defaults = array_replace($this->defaults, $defaults);
 		$this->generator = $generator;
+		$this->format = $format;
 
 		$defaults[NULL][self::FILTER_OUT] = function ($params) use ($defaults, $generator) {
 			$width = $this->acquireArgument('width', $params);
@@ -79,7 +84,7 @@ class Route extends Application\Routers\Route
 		$height = $this->acquireArgument('height', $params);
 		$algorithm = $this->acquireArgument('algorithm', $params);
 
-		$this->generator->generateImage($id, $width, $height, $algorithm);
+		$this->generator->generateImage($this->format, $id, $width, $height, $algorithm);
 	}
 
 }

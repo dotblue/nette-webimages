@@ -15,6 +15,10 @@ use Nette\Utils\Image;
 class Generator extends Nette\Object
 {
 
+	const FORMAT_JPEG = Image::JPEG;
+	const FORMAT_PNG = Image::PNG;
+	const FORMAT_GIF = Image::GIF;
+
 	/** @var string */
 	private $wwwDir;
 
@@ -65,7 +69,7 @@ class Generator extends Nette\Object
 	 * @param  int
 	 * @param  int
 	 */
-	public function generateImage($id, $width, $height, $algorithm)
+	public function generateImage($format, $id, $width, $height, $algorithm)
 	{
 		if (!$this->validator->validate($width, $height, $algorithm)) {
 			throw new Application\BadRequestException;
@@ -95,7 +99,7 @@ class Generator extends Nette\Object
 			}
 		}
 
-		$success = $image->save($destination, 90, Image::JPEG);
+		$success = $image->save($destination, 90, $format);
 		if (!$success) {
 			throw new Application\BadRequestException;
 		}
