@@ -184,4 +184,4 @@ class Route extends Application\Routers\Route
 
 }
 
-class NotAllowedImageException extends \Exception {}
+class NotAllowedImageException extends Application\BadRequestException {}
