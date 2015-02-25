@@ -15,6 +15,7 @@ class Extension extends DI\CompilerExtension
 	/** @var array */
 	private $defaults = [
 		'routes' => [],
+		'prependRoutesToRouter' => TRUE,
 		'rules' => [],
 		'providers' => [],
 		'wwwDir' => '%wwwDir%',
@@ -43,27 +44,34 @@ class Extension extends DI\CompilerExtension
 			]);
 		}
 
-		$i = 0;
-		foreach ($config['routes'] as $route => $defaults) {
-			if (!is_array($defaults)) {
-				$route = $defaults;
-				$defaults = [];
-			}
-
-			$route = $container->addDefinition($this->prefix('route' . $i))
-				->setClass('DotBlue\WebImages\Route', [
-					$route,
-					$defaults,
-					$this->prefix('@generator'),
-				])
+		if ($config['routes']) {
+			$router = $container->addDefinition($this->prefix('router'))
+				->setClass('Nette\Application\Routers\RouteList')
+				->addTag($this->prefix('routeList'))
 				->setAutowired(FALSE);
 
-			$container->getDefinition('router')
-				->addSetup('$service[] = ?', [
+			$i = 0;
+			foreach ($config['routes'] as $route => $defaults) {
+				if (!is_array($defaults)) {
+					$route = $defaults;
+					$defaults = [];
+				}
+
+				$route = $container->addDefinition($this->prefix('route' . $i))
+					->setClass('DotBlue\WebImages\Route', [
+						$route,
+						$defaults,
+						$this->prefix('@generator'),
+					])
+					->addTag($this->prefix('route'))
+					->setAutowired(FALSE);
+
+				$router->addSetup('$service[] = ?', [
 					$this->prefix('@route' . $i),
 				]);
 
-			$i++;
+				$i++;
+			}
 		}
 
 		if (count($config['providers']) === 0) {
@@ -79,6 +87,25 @@ class Extension extends DI\CompilerExtension
 
 		$latte = $container->getDefinition('nette.latteFactory');
 		$latte->addSetup('DotBlue\WebImages\Macros::install(?->getCompiler())', ['@self']);
+	}
+
+
+
+	public function beforeCompile()
+	{
+		$container = $this->getContainerBuilder();
+		$config = $this->getConfig($this->defaults);
+
+		if ($config['prependRoutesToRouter']) {
+			$router = $container->getByType('Nette\Application\IRouter');
+			if (!$router) {
+				$router = $container->getDefinition('router');
+			}
+			$router->addSetup('DotBlue\WebImages\Helpers::prependRoute', [
+				'@self',
+				$this->prefix('@router'),
+			]);
+		}
 	}
 
 }
