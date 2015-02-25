@@ -53,6 +53,8 @@ webimages:
 		- images/<id>-<width>x<height>.jpg
 ```
 
+> By default all these routes will be prepended before your other routes - assuming you use `Nette\Application\Routers\RouteList` as your root router. You can disable this by setting `prependRoutesToRouter: false`. Then it's your responsibility to plug webimages router (service `webimages.router`) to your routing implementation.
+
 Addon gives you new macro `n:src`. Now you're ready to use it.
 
 ```html

@@ -17,6 +17,9 @@ class Route extends Application\Routers\Route
 		'algorithm' => IProvider::FIT,
 	];
 
+	/** @var Generator */
+	private $generator;
+
 
 
 	/**
@@ -27,6 +30,7 @@ class Route extends Application\Routers\Route
 	public function __construct($mask, array $defaults, Generator $generator)
 	{
 		$this->defaults = array_replace($this->defaults, $defaults);
+		$this->generator = $generator;
 
 		$defaults[NULL][self::FILTER_OUT] = function ($params) use ($defaults, $generator) {
 			$width = $this->acquireArgument('width', $params);
@@ -45,17 +49,7 @@ class Route extends Application\Routers\Route
 		};
 
 		$defaults['presenter'] = 'Nette:Micro';
-		$defaults['callback'] = function ($presenter) use ($generator) {
-			$params = $presenter->getRequest()->getParameters();
-
-			$id = $params['id'];
-
-			$width = $this->acquireArgument('width', $params);
-			$height = $this->acquireArgument('height', $params);
-			$algorithm = $this->acquireArgument('algorithm', $params);
-
-			$generator->generateImage($id, $width, $height, $algorithm);
-		};
+		$defaults['callback'] = $this;
 
 		parent::__construct($mask, $defaults);
 	}
@@ -71,6 +65,21 @@ class Route extends Application\Routers\Route
 		} else {
 			throw new \Exception;
 		}
+	}
+
+
+
+	public function __invoke($presenter)
+	{
+		$params = $presenter->getRequest()->getParameters();
+
+		$id = $params['id'];
+
+		$width = $this->acquireArgument('width', $params);
+		$height = $this->acquireArgument('height', $params);
+		$algorithm = $this->acquireArgument('algorithm', $params);
+
+		$this->generator->generateImage($id, $width, $height, $algorithm);
 	}
 
 }
