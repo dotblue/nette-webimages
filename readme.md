@@ -11,7 +11,7 @@
 
 1) Copy source codes from Github or using [Composer](http://getcomposer.org/):
 ```sh
-$ composer require dotblue/nette-webimages@~1.0
+$ composer require dotblue/nette-webimages
 ```
 
 2) Register as Configurator's extension:
