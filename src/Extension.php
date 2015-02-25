@@ -12,6 +12,10 @@ use Nette\DI;
 class Extension extends DI\CompilerExtension
 {
 
+	const FORMAT_JPEG = 'jpeg';
+	const FORMAT_PNG = 'png';
+	const FORMAT_GIF = 'gif';
+
 	/** @var array */
 	private $defaults = [
 		'routes' => [],
@@ -19,6 +23,14 @@ class Extension extends DI\CompilerExtension
 		'rules' => [],
 		'providers' => [],
 		'wwwDir' => '%wwwDir%',
+		'format' => self::FORMAT_JPEG,
+	];
+
+	/** @var array */
+	public $supportedFormats = [
+		self::FORMAT_JPEG => Generator::FORMAT_JPEG,
+		self::FORMAT_PNG => Generator::FORMAT_PNG,
+		self::FORMAT_GIF => Generator::FORMAT_GIF,
 	];
 
 
@@ -51,16 +63,32 @@ class Extension extends DI\CompilerExtension
 				->setAutowired(FALSE);
 
 			$i = 0;
-			foreach ($config['routes'] as $route => $defaults) {
-				if (!is_array($defaults)) {
-					$route = $defaults;
-					$defaults = [];
+			foreach ($config['routes'] as $route => $definition) {
+				if (!is_array($definition)) {
+					$definition = [
+						'mask' => $definition,
+						'defaults' => [],
+					];
+				} else {
+					if (!isset($definition['defaults'])) {
+						$definition['defaults'] = [];
+					}
 				}
+
+				if (!isset($definition['format'])) {
+					$definition['format'] = $this->recognizeFormatInMask($definition['mask']) ?: $config['format'];
+				}
+
+				if (!isset($this->supportedFormats[$definition['format']])) {
+					throw new InvalidConfigException("Format '$definition[format]' isn't supported.");
+				}
+				$definition['format'] = $this->supportedFormats[$definition['format']];
 
 				$route = $container->addDefinition($this->prefix('route' . $i))
 					->setClass('DotBlue\WebImages\Route', [
-						$route,
-						$defaults,
+						$definition['mask'],
+						$definition['format'],
+						$definition['defaults'],
 						$this->prefix('@generator'),
 					])
 					->addTag($this->prefix('route'))
@@ -105,6 +133,24 @@ class Extension extends DI\CompilerExtension
 				'@self',
 				$this->prefix('@router'),
 			]);
+		}
+	}
+
+
+
+	/**
+	 * @param  string
+	 * @return string|NULL
+	 */
+	private function recognizeFormatInMask($mask)
+	{
+		$possibleFormats = array_map(function ($format) {
+			return '.' . $format;
+		}, array_keys($this->supportedFormats));
+		if (in_array(substr($mask, -5), $possibleFormats)) {
+			return substr($mask, -4);
+		} elseif (in_array(substr($mask, -4), $possibleFormats)) {
+			return substr($mask, -3);
 		}
 	}
 
