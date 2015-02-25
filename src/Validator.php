@@ -22,14 +22,12 @@ class Validator extends Nette\Object
 	 *
 	 * @param  int
 	 * @param  int
-	 * @param  int
 	 */
-	public function addRule($width, $height, $algorithm)
+	public function addRule($width, $height)
 	{
 		$this->rules[] = [
 			'width' => (int) $width,
 			'height' => (int) $height,
-			'algorithm' => (int) $algorithm,
 		];
 	}
 
@@ -40,20 +38,12 @@ class Validator extends Nette\Object
 	 *
 	 * @param  int
 	 * @param  int
-	 * @param  int
 	 * @return bool
 	 */
-	public function validate($width, $height, $algorithm)
+	public function validate($width, $height)
 	{
 		foreach ($this->rules as $rule) {
-			if (
-				(int) $width === $rule['width']
-				&& (int) $height === $rule['height']
-				&& (
-					!isset($algorithm)
-					|| (int) $algorithm === $rule['algorithm']
-				)
-			) {
+			if ((int) $width === $rule['width'] && (int) $height === $rule['height']) {
 				return TRUE;
 			}
 		}

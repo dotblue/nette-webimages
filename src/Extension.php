@@ -49,10 +49,9 @@ class Extension extends DI\CompilerExtension
 			]);
 
 		foreach ($config['rules'] as $rule) {
-			$validator->addSetup('$service->addRule(?, ?, ?)', [
+			$validator->addSetup('$service->addRule(?, ?)', [
 				$rule['width'],
 				$rule['height'],
-				isset($rule['algorithm']) ? $rule['algorithm'] : NULL,
 			]);
 		}
 

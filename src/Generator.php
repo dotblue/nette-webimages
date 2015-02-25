@@ -69,15 +69,15 @@ class Generator extends Nette\Object
 	 * @param  int
 	 * @param  int
 	 */
-	public function generateImage($format, $id, $width, $height, $algorithm)
+	public function generateImage($format, $id, $width, $height)
 	{
-		if (!$this->validator->validate($width, $height, $algorithm)) {
+		if (!$this->validator->validate($width, $height)) {
 			throw new Application\BadRequestException;
 		}
 
 		$image = NULL;
 		foreach ($this->providers as $provider) {
-			$image = $provider->getImage($id, $width, $height, $algorithm);
+			$image = $provider->getImage($id, $width, $height);
 			if ($image) {
 				break;
 			}

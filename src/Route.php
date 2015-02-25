@@ -14,7 +14,6 @@ class Route extends Application\Routers\Route
 
 	/** @var array */
 	private $defaults = [
-		'algorithm' => IProvider::FIT,
 	];
 
 	/** @var Generator */
@@ -40,10 +39,9 @@ class Route extends Application\Routers\Route
 		$defaults[NULL][self::FILTER_OUT] = function ($params) use ($defaults, $generator) {
 			$width = $this->acquireArgument('width', $params);
 			$height = $this->acquireArgument('height', $params);
-			$algorithm = $this->acquireArgument('algorithm', $params);
 
-			if (!$generator->getValidator()->validate($width, $height, $algorithm)) {
 				throw new NotAllowedImageException("Image with params ({$width}x{$height}, {$algorithm}) is not allowed - check your 'webimages.rules' please.");
+			if (!$generator->getValidator()->validate($width, $height)) {
 			}
 
 			if (isset($defaults[NULL][self::FILTER_OUT])) {
@@ -82,9 +80,8 @@ class Route extends Application\Routers\Route
 
 		$width = $this->acquireArgument('width', $params);
 		$height = $this->acquireArgument('height', $params);
-		$algorithm = $this->acquireArgument('algorithm', $params);
 
-		$this->generator->generateImage($this->format, $id, $width, $height, $algorithm);
+		$this->generator->generateImage($this->format, $id, $width, $height);
 	}
 
 }
