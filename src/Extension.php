@@ -14,6 +14,7 @@ class Extension extends DI\CompilerExtension
 
 	/** @var array */
 	private $defaults = [
+		'umask' => FALSE,
 		'routes' => [],
 		'prependRoutesToRouter' => TRUE,
 		'rules' => [],
@@ -35,6 +36,7 @@ class Extension extends DI\CompilerExtension
 		$generator = $container->addDefinition($this->prefix('generator'))
 			->setClass('DotBlue\WebImages\Generator', [
 				$config['wwwDir'],
+				$config['umask'],
 			]);
 
 		foreach ($config['rules'] as $rule) {
