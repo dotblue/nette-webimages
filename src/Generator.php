@@ -87,7 +87,7 @@ class Generator extends Nette\Object
 			exit;
 		}
 
-		$destination = $this->wwwDir . '/' . $this->httpRequest->getUrl()->getPath();
+		$destination = $this->wwwDir . '/' . $this->httpRequest->getUrl()->getRelativeUrl();
 
 		$dirname = dirname($destination);
 		if (!is_dir($dirname)) {
