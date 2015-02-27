@@ -87,13 +87,11 @@ class Generator extends Nette\Object
 			exit;
 		}
 
-		$destination = $this->wwwDir . '/' . $this->httpRequest->getUrl()->getRelativeUrl();
+		$destination = $this->wwwDir . '/' . $this->httpRequest->getUrl()->getPath();
 
 		$dirname = dirname($destination);
 		if (!is_dir($dirname)) {
-			$oldmask = umask(0);
 			$success = @mkdir($dirname, 0777, TRUE);
-			umask($oldmask);
 			if (!$success) {
 				throw new Application\BadRequestException;
 			}
