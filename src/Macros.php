@@ -51,6 +51,9 @@ class Macros extends Latte\Macros\MacroSet
 			} elseif ($key === 2 && !isset($arguments['height'])) {
 				$arguments['height'] = $value;
 				unset($arguments[$key]);
+			} elseif ($key === 3 && !isset($arguments['path'])) {
+				$arguments['path'] = $value;
+				unset($arguments[$key]);
 			}
 		}
 
@@ -59,6 +62,9 @@ class Macros extends Latte\Macros\MacroSet
 		}
 		if (!isset($arguments['height'])) {
 			$arguments['height'] = 0;
+		}
+		if (!isset($arguments['path'])) {
+			$arguments['path'] = NULL;
 		}
 
 		return $arguments;
