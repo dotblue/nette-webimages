@@ -8,6 +8,7 @@ webimages:
 
 	routes:
 		- 'images/<id>-<width>x<height>.jpg'
+		- 'images/<path>/<id>-<width>x<height>.jpg'
 		- 'images/<id>-<width>x<height>.png'
 
 	rules:

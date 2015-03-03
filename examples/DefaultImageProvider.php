@@ -29,8 +29,12 @@ class DefaultImageProvider implements IProvider
 		$algorithm = isset($parameters['algorithm'])
 			? $parameters['algorithm']
 			: self::FIT;
+		
+		$path = isset($parameters['path'])
+			? $parameters['path'] . '/'
+			: NULL;
 
-		$path = $this->wwwDir . '/originals/' . $id . '.jpg';
+		$path = $this->wwwDir . '/originals/' . $path . $id . '.jpg';
 
 		if (is_file($path)) {
 			$image = Image::fromFile($path);
