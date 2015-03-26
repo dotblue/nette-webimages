@@ -141,8 +141,6 @@ class Route extends Application\Routers\Route
 			return $data[$name];
 		} elseif (isset($this->defaults[$name])) {
 			return $this->defaults[$name];
-		} else {
-			throw new \Exception;
 		}
 	}
 
