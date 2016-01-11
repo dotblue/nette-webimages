@@ -47,9 +47,9 @@ class Route extends Application\Routers\Route
 
 	/**
 	 * @param  string
-	 * @param  string
 	 * @param  array
-	 * @param  Validator
+	 * @param  Generator
+	 * @param  int|NULL
 	 */
 	public function __construct($mask, array $defaults, Generator $generator, $flags = 0)
 	{
