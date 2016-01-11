@@ -33,12 +33,16 @@ class Generator extends Nette\Object
 
 	/** @var IProvider[] */
 	private $providers = [];
+	
+	/** @var integer */
+	private $umask;
 
 
 
-	public function __construct($wwwDir, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Validator $validator)
+	public function __construct($wwwDir, $umask, Http\IRequest $httpRequest, Http\IResponse $httpResponse, Validator $validator)
 	{
 		$this->wwwDir = $wwwDir;
+		$this->umask = $umask;
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
 		$this->validator = $validator;
@@ -91,10 +95,7 @@ class Generator extends Nette\Object
 
 		$dirname = dirname($destination);
 		if (!is_dir($dirname)) {
-			$success = @mkdir($dirname, 0777, TRUE);
-			if (!$success) {
-				throw new Application\BadRequestException;
-			}
+			$this->createFolder($dirname);
 		}
 
 		$success = $image->save($destination, 90, $format);
@@ -104,6 +105,23 @@ class Generator extends Nette\Object
 
 		$image->send();
 		exit;
+	}
+	
+	
+	
+	private function createFolder($dirname)
+	{
+		if ($this->umask) {
+			$oldmask = umask(0);
+			$success = @mkdir($dirname, octdec($this->umask), TRUE);
+			umask($oldmask);
+		} else {
+			$success = @mkdir($dirname, 0777, TRUE);
+		}
+		
+		if (!$success) {
+			throw new Application\BadRequestException;
+		}
 	}
 
 }

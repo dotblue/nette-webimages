@@ -55,6 +55,15 @@ webimages:
 
 > By default all these routes will be prepended before your other routes - assuming you use `Nette\Application\Routers\RouteList` as your root router. You can disable this by setting `prependRoutesToRouter: false`. Then it's your responsibility to plug webimages router (service `webimages.router`) to your routing implementation.
 
+If you need custom permission for creating folders, you can set the permission in config:
+
+```
+webimages:
+	umask: 0777
+```
+
+> Custom permission implementation uses umask
+
 Addon gives you new macro `n:src`. Now you're ready to use it.
 
 ```html
