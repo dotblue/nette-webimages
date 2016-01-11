@@ -68,3 +68,14 @@ This will result in following HTML:
 ```
 
 Creation of this file will handle your implementation of `DotBlue\WebImages\IProvider`.
+
+### HTTPS
+
+To toggle secured route flag use following syntax in your configuration:
+
+```
+webimages:
+    routes:
+        - mask: images/<id>-<width>x<height>.jpg
+          secured: true
+```

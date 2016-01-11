@@ -6,6 +6,7 @@
 
 namespace DotBlue\WebImages;
 
+use Nette\Application\Routers\Route as NetteRoute;
 use Nette\DI;
 
 
@@ -56,10 +57,14 @@ class Extension extends DI\CompilerExtension
 					$definition = [
 						'mask' => $definition,
 						'defaults' => [],
+						'secured' => FALSE,
 					];
 				} else {
 					if (!isset($definition['defaults'])) {
 						$definition['defaults'] = [];
+					}
+					if (!isset($definition['secured'])) {
+						$definition['secured'] = FALSE;
 					}
 				}
 
@@ -79,6 +84,7 @@ class Extension extends DI\CompilerExtension
 						$definition['mask'],
 						$definition['defaults'],
 						$this->prefix('@generator'),
+						$definition['secured'] ? NetteRoute::SECURED : 0,
 					])
 					->addTag($this->prefix('route'))
 					->setAutowired(FALSE);
