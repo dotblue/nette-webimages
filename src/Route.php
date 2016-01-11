@@ -51,7 +51,7 @@ class Route extends Application\Routers\Route
 	 * @param  array
 	 * @param  Validator
 	 */
-	public function __construct($mask, array $defaults, Generator $generator)
+	public function __construct($mask, array $defaults, Generator $generator, $flags = 0)
 	{
 		$this->defaults = $defaults;
 		$this->generator = $generator;
@@ -74,7 +74,7 @@ class Route extends Application\Routers\Route
 		$defaults['presenter'] = 'Nette:Micro';
 		$defaults['callback'] = $this;
 
-		parent::__construct($mask, $defaults);
+		parent::__construct($mask, $defaults, $flags);
 	}
 
 
