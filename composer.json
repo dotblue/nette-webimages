@@ -30,6 +30,9 @@
         "latte/latte": ">=2.2.0,<2.4.0",
         "nette/utils": ">=2.2.0,<2.4.0"
     },
+    "require-dev": {
+        "nette/tester": "~1.2.0"
+    },
     "autoload": {
         "classmap": ["src/"]
     }
