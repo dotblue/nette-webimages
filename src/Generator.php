@@ -91,7 +91,9 @@ class Generator extends Nette\Object
 
 		$dirname = dirname($destination);
 		if (!is_dir($dirname)) {
+			$oldmask = umask(0);
 			$success = @mkdir($dirname, 0777, TRUE);
+			umask($oldmask);
 			if (!$success) {
 				throw new Application\BadRequestException;
 			}
