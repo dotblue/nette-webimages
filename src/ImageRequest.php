@@ -14,7 +14,10 @@ class ImageRequest extends Nette\Object
 
 	/** @var string */
 	private $id;
-
+	
+	/** @var string */
+	private $folder;
+	
 	/** @var int|NULL */
 	private $width;
 
@@ -34,14 +37,16 @@ class ImageRequest extends Nette\Object
 	 * @param  string
 	 * @param  int|NULL
 	 * @param  int|NULL
+	 * @param  string
 	 * @param  array
 	 */
-	public function __construct($format, $id, $width, $height, array $parameters)
+	public function __construct($format, $id, $width, $height, $folder, array $parameters)
 	{
 		$this->id = $id;
 		$this->width = $width;
 		$this->height = $height;
 		$this->format = $format;
+		$this->folder = $folder;
 		$this->parameters = $parameters;
 	}
 
@@ -94,5 +99,23 @@ class ImageRequest extends Nette\Object
 	{
 		return $this->parameters;
 	}
+	
+	/**
+	 * @return string
+	 */
+	public function getFolder()
+	{
+		return $this->folder;
+	}
+	
+	/**
+	 * @param string $folder
+	 */
+	public function setFolder($folder)
+	{
+		$this->folder = $folder;
+	}
+	
+	
 
 }

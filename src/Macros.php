@@ -51,6 +51,9 @@ class Macros extends Latte\Macros\MacroSet
 			} elseif ($key === 2 && !isset($arguments['height'])) {
 				$arguments['height'] = $value;
 				unset($arguments[$key]);
+			} elseif($key === 3 && !isset($arguments['folder'])) {
+				$arguments['folder'] = $value;
+				unset($arguments[$key]);
 			}
 		}
 
