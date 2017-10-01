@@ -97,7 +97,7 @@ class Generator extends Nette\Object
 			}
 		}
 
-		$success = $image->save($destination, 90, $format);
+		$success = $image->save($destination, 75, $format);
 		if (!$success) {
 			throw new Application\BadRequestException;
 		}

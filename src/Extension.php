@@ -42,6 +42,7 @@ class Extension extends DI\CompilerExtension
 			$validator->addSetup('$service->addRule(?, ?)', [
 				$rule['width'],
 				$rule['height'],
+				$rule['folder'],
 			]);
 		}
 

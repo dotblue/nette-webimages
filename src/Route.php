@@ -19,6 +19,9 @@ class Route extends Application\Routers\Route
 
 	/** @var string|NULL */
 	private $id;
+	
+	/** @var string|NULL */
+	private $folder;
 
 	/** @var string|NULL */
 	private $format;
@@ -59,8 +62,9 @@ class Route extends Application\Routers\Route
 		$defaults[NULL][self::FILTER_OUT] = function ($parameters) {
 			$width = $this->acquireArgument('width', $parameters);
 			$height = $this->acquireArgument('height', $parameters);
-
-			if (!$this->generator->getValidator()->validate($width, $height)) {
+			$folder = $this->acquireArgument('folder', $parameters);
+			
+			if (!$this->generator->getValidator()->validate($width, $height, $folder)) {
 				throw new NotAllowedImageException("Image with size {$width}x{$height} is not allowed - check your 'webimages.rules' please.");
 			}
 
@@ -88,7 +92,13 @@ class Route extends Application\Routers\Route
 		$this->id = $id;
 		return $this;
 	}
-
+	
+	public function setFolder($folder)
+	{
+		$this->folder = $folder;
+		
+		return $this;
+	}
 
 
 	/**
@@ -176,6 +186,7 @@ class Route extends Application\Routers\Route
 			$id,
 			$this->acquireArgument('width', $parameters),
 			$this->acquireArgument('height', $parameters),
+			$this->acquireArgument('folder', $parameters),
 			$parameters
 		));
 	}

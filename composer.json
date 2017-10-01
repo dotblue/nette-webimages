@@ -22,14 +22,6 @@
         "issues": "https://github.com/dotblue/nette-webimages/issues",
         "source": "https://github.com/dotblue/nette-webimages"
     },
-    "require": {
-        "php": ">=5.4",
-        "nette/application": ">=2.2.0,<2.4.0",
-        "nette/di": ">=2.2.0,<2.4.0",
-        "nette/http": ">=2.2.0,<2.4.0",
-        "latte/latte": ">=2.2.0,<2.4.0",
-        "nette/utils": ">=2.2.0,<2.4.0"
-    },
     "autoload": {
         "classmap": ["src/"]
     }
