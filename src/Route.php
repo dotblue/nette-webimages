@@ -72,7 +72,7 @@ class Route extends Application\Routers\Route
 		};
 
 		$defaults['presenter'] = 'Nette:Micro';
-		$defaults['callback'] = $this;
+		$defaults['callback'] = \Closure::fromCallable($this);
 
 		parent::__construct($mask, $defaults, $flags);
 	}
